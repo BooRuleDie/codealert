@@ -89,7 +89,7 @@ QUERY = "{query}"
         f.write(script)
 
     # change reexecution time
-    os.system(f"""(crontab -l 2>/dev/null ; echo "* * * * * cd {currentDir}/Scripts && /usr/bin/python3 {currentDir}/Scripts/{MD5HASH}.py") | crontab -u {username} -""")
+    os.system(f"""(crontab -l 2>/dev/null ; echo "0 8 * * * cd {currentDir}/Scripts && /usr/bin/python3 {currentDir}/Scripts/{MD5HASH}.py") | crontab -u {username} -""")
 
 def main():
     search = input("Enter dork here: ")
