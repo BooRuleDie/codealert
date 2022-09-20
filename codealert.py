@@ -5,6 +5,7 @@ import sqlite3
 import hashlib
 import os
 from getpass import getuser
+from colorama import Fore, Back, Style
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -37,7 +38,8 @@ def getJSON(search, GITHUB_API, md5hash):
         JSON = json.loads(r.text)
         
         return JSON
-    print("You've already added this cronjob. Exiting...")
+    print(f"{Style.RESET_ALL}[{Fore.RED}!{Fore.RESET}] You've already added this cronjob.")
+    print(f"[{Fore.RED}!{Style.RESET_ALL}] {Fore.RED}Exiting...{Style.RESET_ALL}")
     exit()
     
 def writeToDb(items, MD5HASH):
@@ -90,9 +92,29 @@ QUERY = "{query}"
 
     # change reexecution time
     os.system(f"""(crontab -l 2>/dev/null ; echo "0 8 * * * cd {currentDir}/Scripts && /usr/bin/python3 {currentDir}/Scripts/{MD5HASH}.py") | crontab -u {username} -""")
+    print(f"[{Fore.GREEN}+{Fore.RESET}] {Style.BRIGHT}New cronjob has been successfully added!{Style.RESET_ALL}")
+
+def printbanner():
+    banner = f"""\
+{Fore.RED}┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓{Fore.RESET}
+{Fore.RED}┃{Fore.RESET}{Style.BRIGHT}    ______          __     ___    __          __  {Style.RESET_ALL}{Fore.RED}┃{Fore.RESET} 
+{Fore.RED}┃{Fore.RESET}{Style.BRIGHT}   / ____/___  ____/ /__  /   |  / /__  _____/ /_ {Style.RESET_ALL}{Fore.RED}┃{Fore.RESET} 
+{Fore.RED}┃{Fore.RESET}{Style.BRIGHT}  / /   / __ \/ __  / _ \/ /| | / / _ \/ ___/ __/ {Style.RESET_ALL}{Fore.RED}┃{Fore.RESET} 
+{Fore.RED}┃{Fore.RESET}{Style.BRIGHT} / /___/ /_/ / /_/ /  __/ ___ |/ /  __/ /  / /_   {Style.RESET_ALL}{Fore.RED}┃{Fore.RESET} 
+{Fore.RED}┃{Fore.RESET}{Style.BRIGHT} \____/\____/\__,_/\___/_/  |_/_/\___/_/   \__/   {Style.RESET_ALL}{Fore.RED}┃{Fore.RESET} 
+{Fore.RED}┃{Fore.RESET}                                                  {Fore.RED}┃{Fore.RESET} 
+{Fore.RED}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛{Fore.RESET} 
+                                    {Fore.RED}By BooRuleDie{Fore.RESET}
+                                        
+[{Fore.BLUE}?{Style.RESET_ALL}] {Fore.BLUE}Please enter your dork \033[33;5m>\033[0m {Fore.YELLOW}"""
+
+    os.system("clear")
+    dork = input(banner)
+    return dork
 
 def main():
-    search = input("Enter dork here: ")
+    search = printbanner()
+    print()
     query2string = "".join(sorted(search.split()))
     md5hash = hashlib.md5(query2string.encode()).hexdigest()
 
@@ -102,16 +124,16 @@ def main():
     JSON = getJSON(search, GITHUB_API, md5hash)
 
     if JSON["total_count"] == 0:
-        print("Couldn't find any file.")
-        print("Exiting...")
+        print(f"{Style.RESET_ALL}[{Fore.RED}-{Style.RESET_ALL}] {Style.BRIGHT}Couldn't find any file.{Style.RESET_ALL}")
+        print(f"[{Fore.RED}!{Style.RESET_ALL}] {Fore.RED}Exiting...{Style.RESET_ALL}")
     else:
-        answer = input(f"{JSON['total_count']} files found, do you want to proceed ? (y/n) ")
+        answer = input(f"{Style.RESET_ALL}[{Fore.GREEN}+{Fore.RESET}] {Style.BRIGHT}{Fore.GREEN}{JSON['total_count']}{Style.RESET_ALL} files found, do you want to proceed ? (y/n) ")
 
         if answer.upper() == "Y" or answer.upper() =="YES":    
             writeToDb(JSON["items"], md5hash)
             initiateCronjob(search, md5hash)
         else:
-            print("Exiting...")
+            print(f"[{Fore.RED}!{Style.RESET_ALL}] {Fore.RED}Exiting...{Style.RESET_ALL}")
 
 if __name__ == "__main__":
     main()
