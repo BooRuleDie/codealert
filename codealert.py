@@ -5,7 +5,7 @@ import sqlite3
 import hashlib
 import os
 from getpass import getuser
-from colorama import Fore, Back, Style
+from colorama import Fore, Style
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -53,6 +53,7 @@ def writeToDb(items, MD5HASH):
 
         for file in items:
             cursor.execute(f"""insert into '{MD5HASH}' values('{file["html_url"]}')""")
+            print(f'{counter}: {file["html_url"]}')
         
         conn.commit()
 
@@ -113,27 +114,31 @@ def printbanner():
     return dork
 
 def main():
-    search = printbanner()
-    print()
-    query2string = "".join(sorted(search.split()))
-    md5hash = hashlib.md5(query2string.encode()).hexdigest()
+    try:
+        search = printbanner()
+        print()
+        query2string = "".join(sorted(search.split()))
+        md5hash = hashlib.md5(query2string.encode()).hexdigest()
 
-    JSON_CONF = json.load(open("confidential.json"))
-    GITHUB_API = JSON_CONF["Github-API"]
+        JSON_CONF = json.load(open("confidential.json"))
+        GITHUB_API = JSON_CONF["Github-API"]
 
-    JSON = getJSON(search, GITHUB_API, md5hash)
+        JSON = getJSON(search, GITHUB_API, md5hash)
 
-    if JSON["total_count"] == 0:
-        print(f"{Style.RESET_ALL}[{Fore.RED}-{Style.RESET_ALL}] {Style.BRIGHT}Couldn't find any file.{Style.RESET_ALL}")
-        print(f"[{Fore.RED}!{Style.RESET_ALL}] {Fore.RED}Exiting...{Style.RESET_ALL}")
-    else:
-        answer = input(f"{Style.RESET_ALL}[{Fore.GREEN}+{Fore.RESET}] {Style.BRIGHT}{Fore.GREEN}{JSON['total_count']}{Style.RESET_ALL} files found, do you want to proceed ? (y/n) ")
-
-        if answer.upper() == "Y" or answer.upper() =="YES":    
-            writeToDb(JSON["items"], md5hash)
-            initiateCronjob(search, md5hash)
-        else:
+        if JSON["total_count"] == 0:
+            print(f"{Style.RESET_ALL}[{Fore.RED}-{Style.RESET_ALL}] {Style.BRIGHT}Couldn't find any file.{Style.RESET_ALL}")
             print(f"[{Fore.RED}!{Style.RESET_ALL}] {Fore.RED}Exiting...{Style.RESET_ALL}")
+        else:
+            answer = input(f"{Style.RESET_ALL}[{Fore.GREEN}+{Fore.RESET}] {Style.BRIGHT}{Fore.GREEN}{JSON['total_count']}{Style.RESET_ALL} files found, do you want to proceed ? (y/n) ")
+
+            if answer.upper() == "Y" or answer.upper() =="YES":    
+                writeToDb(JSON["items"], md5hash)
+                initiateCronjob(search, md5hash)
+            else:
+                print(f"[{Fore.RED}!{Style.RESET_ALL}] {Fore.RED}Exiting...{Style.RESET_ALL}")
+    except:
+        print(f"{Style.RESET_ALL}[{Fore.RED}-{Fore.RESET}] {Style.BRIGHT}Something went wrong! {Style.RESET_ALL}")
+        print(f"[{Fore.RED}!{Style.RESET_ALL}] {Fore.RED}Exiting...{Style.RESET_ALL}")
 
 if __name__ == "__main__":
     main()
