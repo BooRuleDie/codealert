@@ -1,3 +1,4 @@
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def sendMail(query, files):
@@ -38,37 +39,47 @@ def updateDB(newEntries):
             
         conn.commit()
 
-SETAPI = set()
-SETDB = set()
-
-url = "https://api.github.com/search/code"
-params = {
-    "q" : QUERY
-}
-
-headers = {
-    "Accept" : "application/vnd.github+json",
-    "Authorization" : f"Bearer {GITHUB_API}"
-}
-
-r = requests.get(url=url, headers=headers, params=params, verify=False)
-JSON = json.loads(r.text)
-
-for file in JSON["items"]:
-    SETAPI.add(file["html_url"])
-
-connection = sqlite3.connect("../database.db")
-with connection as conn:
-    cursor = conn.cursor()
+def fetchItems(search, GITHUB_API,itemNumber):   
     
-    results = cursor.execute(f"select * from '{MD5HASH}'")
-    results = results.fetchall()
-    
-    for result in results:
-        SETDB.add(result[0])
+    allItems = set()
+    pageNumber = ceil(itemNumber/100)
 
-newCodes = SETAPI.difference(SETDB)
+    while(len(allItems) != itemNumber):
+        for page in range(1,pageNumber+1):
+            JSON = []
 
-if newCodes:
-    sendMail(QUERY, newCodes)
-    updateDB(newCodes)
+            while(len(JSON) != 100 and not ((itemNumber % 100) == len(JSON) and page == pageNumber)):
+                r = requests.get(url="https://api.github.com/search/code", params={"q" : search,"page" : page,"per_page":100},headers = {"Accept" : "application/vnd.github+json","Authorization" : f"Bearer {GITHUB_API}"})
+
+                try:
+                    JSON = json.loads(r.text)["items"]
+                    for repo in JSON:
+                        allItems.add(repo["html_url"])
+                    
+                except:
+                    now = time()
+                    resetDate = int(r.headers["X-Ratelimit-Reset"])
+                    sleep((resetDate - now) + 4)
+            
+    return allItems
+
+def main():
+
+    SETAPI = fetchItems(QUERY, GITHUB_API, TOTAL_COUNT)
+    SETDB = set()
+
+    connection = sqlite3.connect("../database.db")
+    with connection as conn:
+        cursor = conn.cursor()
+        
+        results = cursor.execute(f"select * from '{MD5HASH}'")
+        results = results.fetchall()
+        
+        for result in results:
+            SETDB.add(result[0])
+
+    newCodes = SETAPI.difference(SETDB)
+
+    if newCodes:
+        sendMail(QUERY, newCodes)
+        updateDB(newCodes)
