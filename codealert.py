@@ -18,7 +18,6 @@ def checkQuery(MD5HASH):
     return False
     
     # connection = sqlite3.connect("database.db")
-    # a small change
     # with connection as conn:
     #     cursor = conn.cursor()
     #     results = cursor.execute("SELECT name FROM sqlite_schema WHERE type='table'")
