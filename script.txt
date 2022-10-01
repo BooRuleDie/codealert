@@ -1,6 +1,32 @@
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+# def canIGetExecuted():    
+#     while(True):
+#         sleep(3)
+        
+#         connection = sqlite3.connect("../database.db")
+#         with connection as conn:
+#             cursor = conn.cursor()
+#             results = cursor.execute("SELECT name FROM cronjobqueue")
+            
+#             tables = []
+#             for result in results.fetchall():
+#                 tables.append(result[0])
+
+#             if MD5HASH not in tables:
+#                 cursor.execute(f"""insert into 'cronjobqueue' values('{MD5HASH}')""")
+#                 conn.commit()            
+#             elif tables[0] == MD5HASH:
+#                 return True
+
+# def removeMeFromQueue():
+#     connection = sqlite3.connect("../database.db")
+#     with connection as conn:
+#         cursor = conn.cursor()
+#         cursor.execute("""delete from cronjobqueue where name = '{MD5HASH}'""")
+#         conn.commit()
+
 def sendMail(query, files):
     msg = EmailMessage()
     msg['Subject'] = 'New Dorks Have Been Detected !'
@@ -30,7 +56,7 @@ def sendMail(query, files):
 
 def updateDB(newEntries):
     
-    connection = sqlite3.connect("../database.db")
+    connection = sqlite3.connect(f"../Databases/{MD5HASH}.db")
     with connection as conn:
         cursor = conn.cursor()
         
@@ -39,36 +65,44 @@ def updateDB(newEntries):
             
         conn.commit()
 
-def fetchItems(search, GITHUB_API,itemNumber):   
+def fetchItems(search, GITHUB_APIs,itemNumber):   
     
     allItems = set()
     pageNumber = ceil(itemNumber/100)
+    GITHUB_API_index = 0
 
     while(len(allItems) != itemNumber):
         for page in range(1,pageNumber+1):
             JSON = []
 
             while(len(JSON) != 100 and not ((itemNumber % 100) == len(JSON) and page == pageNumber)):
-                r = requests.get(url="https://api.github.com/search/code", params={"q" : search,"page" : page,"per_page":100},headers = {"Accept" : "application/vnd.github+json","Authorization" : f"Bearer {GITHUB_API}"})
+                r = requests.get(url="https://api.github.com/search/code", params={"q" : search,"page" : page,"per_page":100},headers = {"Accept" : "application/vnd.github+json","Authorization" : f"Bearer {GITHUB_APIs[GITHUB_API_index]}"})
+                
+                # changing github API Key in each request
+                if GITHUB_API_index == len(GITHUB_APIs) - 1:
+                    GITHUB_API_index = 0
+                else:
+                    GITHUB_API_index += 1
 
                 try:
                     JSON = json.loads(r.text)["items"]
                     for repo in JSON:
                         allItems.add(repo["html_url"])
-                    
                 except:
                     now = time()
                     resetDate = int(r.headers["X-Ratelimit-Reset"])
+                    
                     sleep((resetDate - now) + 4)
-            
+
     return allItems
 
 def main():
 
-    SETAPI = fetchItems(QUERY, GITHUB_API, TOTAL_COUNT)
+    # if canIGetExecuted() == True:
+    SETAPI = fetchItems(QUERY, GITHUB_APIs, TOTAL_COUNT)
     SETDB = set()
 
-    connection = sqlite3.connect("../database.db")
+    connection = sqlite3.connect(f"../Databases/{MD5HASH}.db")
     with connection as conn:
         cursor = conn.cursor()
         
@@ -83,3 +117,9 @@ def main():
     if newCodes:
         sendMail(QUERY, newCodes)
         updateDB(newCodes)
+    
+    # removeMeFromQueue()    
+
+if __name__ == "__main__":
+    main()
+
