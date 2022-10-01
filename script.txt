@@ -1,31 +1,45 @@
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# def canIGetExecuted():    
-#     while(True):
-#         sleep(3)
+def canIGetExecuted(): 
         
-#         connection = sqlite3.connect("../database.db")
-#         with connection as conn:
-#             cursor = conn.cursor()
-#             results = cursor.execute("SELECT name FROM cronjobqueue")
-            
-#             tables = []
-#             for result in results.fetchall():
-#                 tables.append(result[0])
+    while(True):
 
-#             if MD5HASH not in tables:
-#                 cursor.execute(f"""insert into 'cronjobqueue' values('{MD5HASH}')""")
-#                 conn.commit()            
-#             elif tables[0] == MD5HASH:
-#                 return True
+        sleep(1)
+        conn = psycopg2.connect(database="codealert_db",
+                        host="127.0.0.1",
+                        user="codealert",
+                        password="codealert",
+                        port="5432")
+        cursor = conn.cursor()
+        cursor.execute("select * from queue;")
+        results = cursor.fetchall()
+        
+        resultsList = []
+        if results:
+            for result in results:
+                resultsList.append(result[0])
+        
+        if MD5HASH not in resultsList:
+            cursor.execute(f"insert into queue values ('{MD5HASH}') ;")
+            conn.commit()
+        elif MD5HASH == resultsList[0]:
+            cursor.close()
+            conn.close()
+            return True
 
-# def removeMeFromQueue():
-#     connection = sqlite3.connect("../database.db")
-#     with connection as conn:
-#         cursor = conn.cursor()
-#         cursor.execute("""delete from cronjobqueue where name = '{MD5HASH}'""")
-#         conn.commit()
+def removeMeFromQueue():
+    conn = psycopg2.connect(database="codealert_db",
+                        host="127.0.0.1",
+                        user="codealert",
+                        password="codealert",
+                        port="5432")
+    cursor = conn.cursor()
+    cursor.execute(f"delete from queue where hash='{MD5HASH}';")
+    conn.commit()
+    cursor.close()
+    conn.close()
+
 
 def sendMail(query, files):
     msg = EmailMessage()
@@ -98,27 +112,27 @@ def fetchItems(search, GITHUB_APIs,itemNumber):
 
 def main():
 
-    # if canIGetExecuted() == True:
-    SETAPI = fetchItems(QUERY, GITHUB_APIs, TOTAL_COUNT)
-    SETDB = set()
+    if canIGetExecuted() == True:
+        SETAPI = fetchItems(QUERY, GITHUB_APIs, TOTAL_COUNT)
+        SETDB = set()
 
-    connection = sqlite3.connect(f"../Databases/{MD5HASH}.db")
-    with connection as conn:
-        cursor = conn.cursor()
-        
-        results = cursor.execute(f"select * from '{MD5HASH}'")
-        results = results.fetchall()
-        
-        for result in results:
-            SETDB.add(result[0])
+        connection = sqlite3.connect(f"../Databases/{MD5HASH}.db")
+        with connection as conn:
+            cursor = conn.cursor()
+            
+            results = cursor.execute(f"select * from '{MD5HASH}'")
+            results = results.fetchall()
+            
+            for result in results:
+                SETDB.add(result[0])
 
-    newCodes = SETAPI.difference(SETDB)
+        newCodes = SETAPI.difference(SETDB)
 
-    if newCodes:
-        sendMail(QUERY, newCodes)
-        updateDB(newCodes)
+        if newCodes:
+            sendMail(QUERY, newCodes)
+            updateDB(newCodes)
     
-    # removeMeFromQueue()    
+    removeMeFromQueue()    
 
 if __name__ == "__main__":
     main()

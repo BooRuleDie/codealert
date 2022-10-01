@@ -97,6 +97,7 @@ import smtplib
 from email.message import EmailMessage
 from math import ceil
 from time import time, sleep
+import psycopg2
 
 JSON = json.load(open("../confidential.json"))
 
@@ -106,7 +107,7 @@ EMAIL_PASSWORD = JSON["Google-App-Pass"]
 EMAIL_TO = JSON["Email-To"]
 MD5HASH = "{MD5HASH}"
 QUERY = "{query}"
-TOTAL_COUNT = "{total_count}"
+TOTAL_COUNT = int("{total_count}")
 """
     script = someVars + script
 
@@ -115,7 +116,7 @@ TOTAL_COUNT = "{total_count}"
         f.write(script)
 
     # change reexecution time
-    os.system(f"""(crontab -l 2>/dev/null ; echo "* * * * * cd {currentDir}/Scripts && /usr/bin/python3 {currentDir}/Scripts/{MD5HASH}.py") | crontab -u {username} -""")
+    os.system(f"""(crontab -l 2>/dev/null ; echo "0 2 * * * cd {currentDir}/Scripts && /usr/bin/python3 {currentDir}/Scripts/{MD5HASH}.py") | crontab -u {username} -""")
     print(f"\n[{Fore.GREEN}+{Fore.RESET}] {Style.BRIGHT}New cronjob has been successfully added!{Style.RESET_ALL}")
 
 def printbanner():
