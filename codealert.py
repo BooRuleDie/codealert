@@ -17,19 +17,6 @@ def checkQuery(MD5HASH):
         return True
     return False
     
-    # connection = sqlite3.connect("database.db")
-    # with connection as conn:
-    #     cursor = conn.cursor()
-    #     results = cursor.execute("SELECT name FROM sqlite_schema WHERE type='table'")
-        
-    #     tables = []
-    #     for result in results.fetchall():
-    #         tables.append(result[0])
-
-    #     if MD5HASH not in tables:
-    #         return True
-    # return False       
-    
 def fetchItems(search, GITHUB_APIs,itemNumber):   
     
     allItems = set()
