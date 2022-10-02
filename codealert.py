@@ -37,6 +37,9 @@ def fetchItems(search, GITHUB_APIs,itemNumber):
     GITHUB_API_index = 0
 
     while(len(allItems) != itemNumber):
+        
+        print(f"\r{Style.BRIGHT}[{Fore.RED}!{Fore.RESET}] {Fore.RED}{'-----'*(pageNumber)}{Fore.RESET} [{Fore.RED}!{Fore.RESET}] 0%", end="")
+
         for page in range(1,pageNumber+1):
             JSON = []
             
@@ -145,7 +148,14 @@ def main():
         md5hash = hashlib.md5(query2string.encode()).hexdigest()
 
         JSON_CONF = json.load(open("confidential.json"))
-        GITHUB_APIs = [JSON_CONF["Github-API1"],JSON_CONF["Github-API2"],JSON_CONF["Github-API3"],JSON_CONF["Github-API4"],JSON_CONF["Github-API5"]]
+        GITHUB_APIs = []
+        index = 1
+        while(True):   
+            try:
+                GITHUB_APIs.append(JSON_CONF[f"Github-API{index}"])
+                index += 1
+            except KeyError:
+                break
 
         if not checkQuery(md5hash):
             print(f"{Style.RESET_ALL}[{Fore.RED}!{Fore.RESET}] You've already added this cronjob.")
