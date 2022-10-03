@@ -69,9 +69,9 @@ Just enter following commands in your command line to set PostgreSQL up.
 sudo -i -u postgres
 psql
 create user codealert WITH PASSWORD 'codealert';
-CREATE DATABASE codealert_db;
+create database codealert_db;
 \c codealert_db
-create table queue_2 (hash TEXT);
+create table queue (hash TEXT);
 exit
 exit
 ```
