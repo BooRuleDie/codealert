@@ -1,4 +1,3 @@
-
 # What is codealert ?
 
 It's a tool to track some github dorks' results. 
@@ -10,7 +9,7 @@ It's a tool to track some github dorks' results.
 **1.** User issues a GitHub dork to the tool.
     <p style="margin-left: 25px"><img src="https://i.imgur.com/UF4JZ9K.png" alt="step 1" width="300"/></p>
 
-**2.** The tool creates cronjob that'll run a script that check this dork every day *(2 am)*.
+**2.** The tool creates a cronjob that'll run a script that checks this dork every day *(2 am)*.
     <p style="margin-left: 25px"><img src="https://i.imgur.com/xGrVvfF.png" alt="step 1" width="300"/></p>
 
 **3.** Then the tool notify you with a mail when it detects a new file that matches with your dork.
@@ -20,23 +19,23 @@ It's a tool to track some github dorks' results.
 
 # Installation
 
-I've already prepared a file named **prepare.sh** to install all dependencies and softwere like postreSQL. However it's important to note that the tool was made to run on **Ubuntu 20.04** so if you're using any other OS, it might not work.
+I've already prepared a file named **prepare.sh** to install all dependencies and software like PostreSQL. However, it's important to note that the tool was made to run on **Ubuntu 20.04** so if you're using any other OS, it might not work.
 
 ### confidentail.json
 
-It's a JSON file that you need to specify the needed credentials for tool to work.
+It's a JSON file that you need to specify the needed credentials for the tool to work.
 
 <p style="text-align:center"><img src="https://i.imgur.com/0aRi6ac.png" alt="step 1" width="300"/></p>
 
 * **Github-API**: You need to specify a GitHub **PAT**(Personal Access Token). In order to get one:
-  - Sign up an account on github.com.
-  - At the home page click your profile photo at the top rigth corner and click **Settings**.
-  - Then click **Developer setting** at the left bottom corner.
-  - Select **Personal access tokens** and click **Generate new token**.
-  - When you get to the authorisation page, just go the most bottom page and create the key, do not give that key any authorisation.
-  - Now you're done, copy the PAT and paste it into **condidential.json**.
+  - Sign up an account on github.com.
+  - At the home page, click your profile photo at the top right corner and click **Settings**.
+  - Then click **Developer settings" at the left bottom corner.
+  - Select **Personal access tokens** and click **Generate new token**.
+  - When you get to the authorisation page, just go to the very bottom page and create the key. Do not give that key any authorization.
+  - Now you're done, copy the PAT and paste it into **condidential.json**.
 
-After giving one PAT, the tool is ready to go but it'd be too slow. So more PATs you specify to the tool, faster it gets. 
+After giving one PAT, the tool is ready to go, but it'd be too slow to go with just one PAT, so what I recommend is to at least add five PATs.
 
 Also there is no limit for PAT number, so you can continue like so:
 ```json
@@ -54,7 +53,7 @@ Also there is no limit for PAT number, so you can continue like so:
 }
 ```
 
-* **Google-App-Pass**: This tool using google mails to notify users so, you need to get a **Google-App-Pass** for a gmail email from [here](https://myaccount.google.com/apppasswords). Get it and paste it into **Google-App-Pass**.
+* **Google-App-Pass**: This tool uses google mails to notify users, so you need to get a **Google-App-Pass** for a gmail email from [here](https://myaccount.google.com/apppasswords). Get it and paste it into **Google-App-Pass**.
 
 * **Email-From**: This must be the email address that you got Google-App-Pass from.
 
