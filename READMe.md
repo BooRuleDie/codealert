@@ -19,7 +19,7 @@ It's a tool to track some github dorks' results.
 
 # Installation
 
-I've already prepared a file named **prepare.sh** to install all dependencies and software like PostreSQL. However, it's important to note that the tool was made to run on **Ubuntu 20.04** so ifP you're using any other OS, it might not work.
+I've already prepared a file named **prepare.sh** to install all dependencies and software like PostgreSQL. However, it's important to note that the tool was made to run on **Ubuntu 20.04** so if you're using any other OS, it might not work.
 
 ### confidentail.json
 
@@ -31,7 +31,7 @@ It's a JSON file that you need to specify the needed credentials for the tool to
   
   - Sign up an account on github.com.
   - At the home page, click your profile photo at the top right corner and click **Settings**.
-  - Then click **Developer settings" at the left bottom corner.
+  - Then click **Developer settings** at the left bottom corner.
   - Select **Personal access tokens** and click **Generate new token**.
   - When you get to the authorisation page, just go to the very bottom page and create the key. Do not give that key any authorization.
   - Now you're done, copy the PAT and paste it into **condidential.json**.
