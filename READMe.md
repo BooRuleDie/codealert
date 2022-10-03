@@ -4,7 +4,7 @@ It's a tool to track some github dorks' results.
 
 ![tool's interface image](https://i.imgur.com/RfFYEz9.png)
 
-**Here is how it works:**
+### Here is how it works:
 
 **1.** User issues a GitHub dork to the tool.
     <p style="margin-left: 25px"><img src="https://i.imgur.com/UF4JZ9K.png" alt="step 1" width="300"/></p>
@@ -19,7 +19,7 @@ It's a tool to track some github dorks' results.
 
 # Installation
 
-I've already prepared a file named **prepare.sh** to install all dependencies and software like PostreSQL. However, it's important to note that the tool was made to run on **Ubuntu 20.04** so if you're using any other OS, it might not work.
+I've already prepared a file named **prepare.sh** to install all dependencies and software like PostreSQL. However, it's important to note that the tool was made to run on **Ubuntu 20.04** so ifP you're using any other OS, it might not work.
 
 ### confidentail.json
 
