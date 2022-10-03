@@ -25,7 +25,7 @@ def fetchItems(search, GITHUB_APIs,itemNumber):
 
     while(len(allItems) != itemNumber):
         
-        print(f"\r{Style.BRIGHT}[{Fore.RED}!{Fore.RESET}] {Fore.RED}{'-----'*(pageNumber)}{Fore.RESET} [{Fore.RED}!{Fore.RESET}] 0%", end="")
+        print(f"\r{Style.BRIGHT}[{Fore.RED}!{Fore.RESET}] {Fore.RED}{'-----'*(pageNumber)}{Fore.RESET} [{Fore.RED}!{Fore.RESET}] 0%    ", end="")
 
         for page in range(1,pageNumber+1):
             JSON = []
@@ -50,7 +50,7 @@ def fetchItems(search, GITHUB_APIs,itemNumber):
                     sleep((resetDate - now) + 4)
 
             #progress bar
-            print(f"\r{Style.BRIGHT}[{Fore.RED}!{Fore.RESET}] {Fore.GREEN}{'#####'*page}{Fore.RED}{'-----'*(pageNumber-page)}{Fore.RESET} [{Fore.RED}!{Fore.RESET}] {int(page/(pageNumber)*100)}%", end="")
+            print(f"\r{Style.BRIGHT}[{Fore.RED}!{Fore.RESET}] {Fore.GREEN}{'#####'*page}{Fore.RED}{'-----'*(pageNumber-page)}{Fore.RESET} [{Fore.RED}!{Fore.RESET}] {int(page/(pageNumber)*100)}%    ", end="")
 
     return allItems
 
