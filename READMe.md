@@ -28,12 +28,13 @@ It's a JSON file that you need to specify the needed credentials for the tool to
 <p style="text-align:center"><img src="https://i.imgur.com/0aRi6ac.png" alt="step 1" width="300"/></p>
 
 * **Github-API**: You need to specify a GitHub **PAT**(Personal Access Token). In order to get one:
-  - Sign up an account on github.com.
-  - At the home page, click your profile photo at the top right corner and click **Settings**.
-  - Then click **Developer settings" at the left bottom corner.
-  - Select **Personal access tokens** and click **Generate new token**.
-  - When you get to the authorisation page, just go to the very bottom page and create the key. Do not give that key any authorization.
-  - Now you're done, copy the PAT and paste it into **condidential.json**.
+  
+  - Sign up an account on github.com.
+  - At the home page, click your profile photo at the top right corner and click **Settings**.
+  - Then click **Developer settings" at the left bottom corner.
+  - Select **Personal access tokens** and click **Generate new token**.
+  - When you get to the authorisation page, just go to the very bottom page and create the key. Do not give that key any authorization.
+  - Now you're done, copy the PAT and paste it into **condidential.json**.
 
 After giving one PAT, the tool is ready to go, but it'd be too slow to go with just one PAT, so what I recommend is to at least add five PATs.
 
