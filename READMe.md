@@ -60,7 +60,7 @@ Also there is no limit for PAT number, so you can continue like so:
 
 * **Email-To**: Any email address that you want to send the notificaitons.
 
-### PostrgeSQL
+### PostgreSQL
 
 The tool also uses PostgreSQL to create a queue of cronjobs so they don't use the PATs at the same time and don't get caught by GitHub's rate limit.
 
