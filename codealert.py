@@ -46,8 +46,12 @@ def fetchItems(search, GITHUB_APIs,itemNumber):
                 except:
                     now = time()
                     resetDate = int(r.headers["X-Ratelimit-Reset"])
+                    sleeptime = resetDate - now 
 
-                    sleep((resetDate - now) + 4)
+                    if sleeptime >= 0:
+                        sleep(sleeptime)
+                    else:
+                        sleep(-sleeptime)
 
             #progress bar
             print(f"\r{Style.BRIGHT}[{Fore.RED}!{Fore.RESET}] {Fore.GREEN}{'#####'*page}{Fore.RED}{'-----'*(pageNumber-page)}{Fore.RESET} [{Fore.RED}!{Fore.RESET}] {int(page/(pageNumber)*100)}%    ", end="")
@@ -97,7 +101,6 @@ EMAIL_PASSWORD = JSON["Google-App-Pass"]
 EMAIL_TO = JSON["Email-To"]
 MD5HASH = "{MD5HASH}"
 QUERY = "{query}"
-TOTAL_COUNT = int("{total_count}")
 """
     script = someVars + script
 
