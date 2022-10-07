@@ -68,7 +68,7 @@ def writeToDb(items, MD5HASH):
         
         conn.commit()
 
-def initiateCronjob(query, MD5HASH,total_count):
+def initiateCronjob(query, MD5HASH, GithubAPIs):
     currentDir = os.getcwd()
     username = getuser()
     
@@ -91,7 +91,7 @@ import psycopg2
 
 JSON = json.load(open("../confidential.json"))
 
-GITHUB_APIs = [JSON["Github-API1"],JSON["Github-API2"],JSON["Github-API3"],JSON["Github-API4"],JSON["Github-API5"]]
+GITHUB_APIs = {GithubAPIs}
 EMAIL_ADDRESS = JSON["Email-From"]
 EMAIL_PASSWORD = JSON["Google-App-Pass"]
 EMAIL_TO = JSON["Email-To"]
@@ -162,7 +162,7 @@ def main():
             if answer.upper() == "Y" or answer.upper() =="YES":   
                 items = fetchItems(search, GITHUB_APIs, total_count)
                 writeToDb(items, md5hash)
-                initiateCronjob(search, md5hash, total_count)
+                initiateCronjob(search, md5hash, GITHUB_APIs)
             else:
                 print(f"[{Fore.RED}!{Style.RESET_ALL}] {Fore.RED}Exiting...{Style.RESET_ALL}")
     except KeyError:
