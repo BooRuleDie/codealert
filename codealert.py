@@ -23,14 +23,14 @@ def fetchItems(search, GITHUB_APIs,itemNumber):
     pageNumber = ceil(itemNumber/100)
     GITHUB_API_index = 0
 
-    while(len(allItems) != itemNumber):
+    while(len(allItems) < itemNumber):
         
         print(f"\r{Style.BRIGHT}[{Fore.RED}!{Fore.RESET}] {Fore.RED}{'-----'*(pageNumber)}{Fore.RESET} [{Fore.RED}!{Fore.RESET}] 0%    ", end="")
 
         for page in range(1,pageNumber+1):
             JSON = []
             
-            while(len(JSON) != 100 and not ((itemNumber % 100) == len(JSON) and page == pageNumber)):
+            while(len(JSON) != 100 and not ((itemNumber % 100) <= len(JSON) and page == pageNumber)):
                 r = requests.get(url="https://api.github.com/search/code", params={"q" : search,"page" : page,"per_page":100},headers = {"Accept" : "application/vnd.github+json","Authorization" : f"Bearer {GITHUB_APIs[GITHUB_API_index]}"})
                 
                 # changing github API Key in each request
