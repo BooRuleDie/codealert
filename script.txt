@@ -106,9 +106,13 @@ def fetchItems(search, GITHUB_APIs):
                         allItems.add(repo["html_url"])
                 except:
                     now = time()
-                    resetDate = int(r.headers["X-Ratelimit-Reset"])
-                    
-                    sleep((resetDate - now) + 4)
+                    resetDate = int(r.headers["X-Ratelimit-Reset"])          
+                    sleeptime = resetDate - now 
+
+                    if sleeptime >= 0:
+                        sleep(sleeptime)
+                    else:
+                        sleep(-sleeptime)
 
     return allItems
 
