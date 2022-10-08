@@ -2,15 +2,14 @@
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def canIGetExecuted(): 
-        
+    conn = psycopg2.connect(database="codealert_db",
+                    host="127.0.0.1",
+                    user="codealert",
+                    password="codealert",
+                    port="5432")        
     while(True):
 
         sleep(1)
-        conn = psycopg2.connect(database="codealert_db",
-                        host="127.0.0.1",
-                        user="codealert",
-                        password="codealert",
-                        port="5432")
         cursor = conn.cursor()
         cursor.execute("select * from queue;")
         results = cursor.fetchall()
@@ -40,10 +39,9 @@ def removeMeFromQueue():
     cursor.close()
     conn.close()
 
-
 def sendMail(query, files):
     msg = EmailMessage()
-    msg['Subject'] = 'New Dorks Have Been Detected !'
+    msg['Subject'] = 'New Files Have Been Detected !'
     msg['From'] = EMAIL_ADDRESS
     msg['To'] = EMAIL_TO
 
