@@ -43,7 +43,7 @@ def fetchItems(search, GITHUB_APIs,itemNumber):
                     JSON = json.loads(r.text)["items"]
                     for repo in JSON:
                         allItems.add(repo["html_url"])                   
-                except:
+                except KeyError:
                     now = time()
                     resetDate = int(r.headers["X-Ratelimit-Reset"])
                     sleeptime = resetDate - now 
@@ -52,6 +52,9 @@ def fetchItems(search, GITHUB_APIs,itemNumber):
                         sleep(sleeptime)
                     else:
                         sleep(-sleeptime)
+                except:
+                    print(f"{Style.BRIGHT}[{Fore.RED}-{Fore.RESET}] An unexpected error.\n\nError: {r.text}{Style.RESET_ALL}")
+                    exit()
 
             #progress bar
             print(f"\r{Style.BRIGHT}[{Fore.RED}!{Fore.RESET}] {Fore.GREEN}{'#####'*page}{Fore.RED}{'-----'*(pageNumber-page)}{Fore.RESET} [{Fore.RED}!{Fore.RESET}] {int(page/(pageNumber)*100)}%    ", end="")
